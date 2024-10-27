@@ -128,3 +128,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+FE/node_modules/
+FE/.env
+BE/node_modules/
+BE/.env

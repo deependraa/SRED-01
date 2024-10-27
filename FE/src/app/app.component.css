@@ -1,0 +1,91 @@
+/* Root Variables */
+:root {
+  --primary-color: #0366d6;
+  --secondary-color: #005cc5;
+  --text-color: #24292e;
+  --border-color: #e1e4e8;
+  --background-color: #ffffff;
+  --button-color: linear-gradient(135deg, #0366d6, #005cc5);
+  --button-hover-color: linear-gradient(135deg, #005cc5, #0366d6);
+  --button-text-color: #ffffff;
+  --font-family: 'Arial', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: #f6f8fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.card {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 360px;
+  text-align: center;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.github-logo {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+
+.card-body {
+  padding-top: 10px;
+}
+
+.connect-button {
+  background: var(--button-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(3, 102, 214, 0.3);
+}
+
+.connect-button:hover {
+  background: var(--button-hover-color);
+  box-shadow: 0 6px 15px rgba(3, 102, 214, 0.4);
+  transform: translateY(-3px); /* Only the button moves slightly up on hover */
+}
+
+.connect-text {
+  margin-top: 15px;
+  font-size: 15px;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  font-weight: 500;
+}
