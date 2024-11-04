@@ -33,6 +33,7 @@ router.get(
 
 // Route to remove GitHub authorization
 router.delete("/remove-auth", verifyToken, async (req, res) => {
+  console.log("verifyToken", verifyToken);
   try {
     const decoded = jwt.verify(req.token, process.env.JwtSecret);
     const userId = decoded._id;

@@ -20,6 +20,8 @@
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
+    "ag-grid-angular": "^32.3.2",
+    "ag-grid-community": "^32.3.2",
     "axios": "^1.7.7",
     "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",

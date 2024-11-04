@@ -13,6 +13,7 @@ const serverPort = process.env.ServerPort;
 
 import "./controllers/github.js";
 import githubRouter from "./routes/github.js";
+import userRouter from "./routes/userRoutes.js";
 
 app.use(
   cors({
@@ -30,6 +31,7 @@ app.use(passport.initialize());
 
 // ALL ROUTES
 app.use("/auth", githubRouter);
+app.use("/users", userRouter);
 
 // server details
 app.listen(serverPort, () =>
