@@ -162,7 +162,7 @@ export class WelcomeComponent implements OnInit {
     {
       field: 'included',
       headerName: 'Included',
-      checkboxSelection: true,
+      checkboxSelection: false,
       editable: true,
     },
   ];

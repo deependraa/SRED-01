@@ -2,7 +2,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './core/guard/auth.guard';
 
 export const appConfig: ApplicationConfig = {
   providers: [

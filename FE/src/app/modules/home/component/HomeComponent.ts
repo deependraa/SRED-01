@@ -20,7 +20,7 @@ import { Component } from '@angular/core';
       </div>
     </div>
   `,
-  styleUrls: ['./home.component.css'],
+  styleUrls: ['../home.component.css'],
 })
 export class HomeComponent {
   connectToGithub() {
