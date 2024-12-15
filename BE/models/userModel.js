@@ -20,6 +20,10 @@ let userSchema = mongoose.Schema(
     accessToken: {
       type: String,
     },
+    isUserDeleted:{
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );

@@ -4,7 +4,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const mongoDbUrl = process.env.MongoDbUrl;
-console.log("mongoDbUrl :", mongoDbUrl);
 
 mongoose.set("strictQuery", true);
 

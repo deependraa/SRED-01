@@ -18,8 +18,6 @@ import userRouter from "./routes/userRoutes.js";
 app.use(
   cors({
     origin: "*",
-    // methods: "GET,POST,PUT,DELETE.PATCH",
-    // credentials: true,
   })
 );
 app.use(logger("dev"));

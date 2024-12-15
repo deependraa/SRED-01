@@ -21,6 +21,10 @@ router.get(
     failureRedirect: `${process.env.clientUrl}?token=error`,
   }),
   (req, res) => {
+    if (!req.user || !req.user.token) {
+      return res.redirect(`${process.env.clientUrl}?token=error`);
+    }
+
     const token = req.user.token;
 
     const decoded = jwt.verify(token, process.env.JwtSecret);
@@ -36,17 +40,23 @@ router.delete("/remove-auth", verifyToken, async (req, res) => {
   try {
     const decoded = jwt.verify(req.token, process.env.JwtSecret);
     const userId = decoded._id;
-    const userData = await User.findByIdAndDelete(userId);
+
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      { isUserDeleted: true },
+      { new: true }
+    );
 
     if (!userData) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ message: "User deleted successfully" });
+    res.status(200).json({ message: "User deleted", user: userData });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    return res.status(500).json({ message: "Error deleting user", error });
+    console.error("Error during soft delete:", error);
+    res.status(500).json({ message: "Error during soft delete", error });
   }
 });
+
 
 export default router;

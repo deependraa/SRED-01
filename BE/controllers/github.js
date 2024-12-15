@@ -8,6 +8,7 @@ import Repo from "../models/repoModel.js";
 import Organization from "../models/organizationModel.js";
 dotenv.config();
 
+// Passport configuration settings for github routes and save the use in db
 passport.use(
   new GithubStrategy(
     {
@@ -15,62 +16,75 @@ passport.use(
       clientSecret: process.env.GithubclientSecret,
       callbackURL: "/auth/github/callback",
       scope: ["user", "read:org"],
-      profileFields: ["email", "displayName", "photos"],
     },
-    function (accessToken, refreshToken, profile, done) {
-      const userdata = {
-        name: profile.displayName,
-        username: profile.username,
-        email: profile._json.email,
-        photo: profile._json.avatar_url,
-        accessToken,
-      };
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const userdata = {
+          name: profile.displayName,
+          username: profile.username,
+          email: profile._json.email || `${profile.username}@noemail.github.com`,
+          photo: profile._json.avatar_url,
+          accessToken
+        };
 
-      User.findOne({ email: profile._json.email }, (err, user) => {
-        if (err) return done(err);
-
-        const secret = process.env.JwtSecret;
+        let user = await User.findOne({ username: userdata.username });
 
         if (user) {
+          if (user.isUserDeleted) {
+            console.log(`Reactivating user: ${user.username}`);
+            user.isUserDeleted = false;
+          }
           userdata._id = user._id;
-          const token = jwt.sign(userdata, secret, { expiresIn: "24h" });
+          const token = jwt.sign(userdata, process.env.JwtSecret, {
+            expiresIn: "24h",
+          });
           user.token = token;
+          await user.save();
 
-          user.save((err) => {
-            if (err) return done(err);
-            return done(null, user);
-          });
-        } else {
-          const token = jwt.sign(userdata, secret, { expiresIn: "24h" });
-
-          User.create({ ...userdata, token }, (err, newUser) => {
-            if (err) return done(err);
-
-            userdata._id = newUser._id;
-            userdata.token = jwt.sign(userdata, secret, { expiresIn: "24h" });
-            newUser.token = userdata.token;
-
-            newUser.save((err) => {
-              if (err) return done(err);
-              return done(null, newUser);
-            });
-          });
+          return done(null, user);
         }
-      });
+
+        const token = jwt.sign(userdata, process.env.JwtSecret, {
+          expiresIn: "24h",
+        });
+
+        user = await User.create({ ...userdata, token, isUserDeleted: false });
+        userdata._id = user._id;
+        userdata.token = jwt.sign(userdata, process.env.JwtSecret, { expiresIn: '24h' });
+        user.token = userdata.token;
+        return done(null, user);
+      } catch (err) {
+        console.error("Error in GitHubStrategy:", err);
+        done(err);
+      }
     }
   )
 );
 
+
+
+// Passport configuration settings for local login
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
+
+// Passport configuration settings for local login
 passport.deserializeUser((id, done) => {
-  User.findById(id, "name , email ,username, token", (err, user) => {
-    done(err, user);
+  User.findById(id, (err, user) => {
+    if (err) {
+      console.error("Error deserializing user:", err);
+      return done(err);
+    }
+    if (!user) {
+      console.warn("User not found during deserialization");
+    }
+    done(null, user);
   });
 });
 
+
+// Save the user repositories in db
 export const includeRepo = async (req, res) => {
   const { repoId } = req.params;
   const userId = req.user._id;
@@ -122,6 +136,9 @@ export const includeRepo = async (req, res) => {
     res.status(500).json({ message: "Failed to include repository", error });
   }
 };
+
+
+// Remove the repository from db
 export const removeRepo = async (req, res) => {
   const { repoId } = req.params;
   const userId = req.user._id;
@@ -147,6 +164,8 @@ export const removeRepo = async (req, res) => {
   }
 };
 
+
+// Save the user organizations and repositories in db
 export const saveUserOrgsAndRepos = async (req, res) => {
   const { accessToken } = req.user;
   const userId = req.user._id;
@@ -237,6 +256,8 @@ export const saveUserOrgsAndRepos = async (req, res) => {
   }
 };
 
+
+// Get the user's saved organizations and repositories
 export const getIncludedReposDetails = async (req, res) => {
   const { accessToken } = req.user;
   const userId = req.user._id;

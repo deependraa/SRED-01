@@ -133,3 +133,5 @@ FE/node_modules/
 FE/.env
 BE/node_modules/
 BE/.env
+
+.angular
