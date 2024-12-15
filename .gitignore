@@ -134,4 +134,4 @@ FE/.env
 BE/node_modules/
 BE/.env
 
-.angular
+FE/.angular
