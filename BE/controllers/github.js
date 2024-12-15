@@ -8,6 +8,7 @@ import Repo from "../models/repoModel.js";
 import Organization from "../models/organizationModel.js";
 dotenv.config();
 
+
 // Passport configuration settings for github routes and save the use in db
 passport.use(
   new GithubStrategy(
@@ -60,7 +61,6 @@ passport.use(
     }
   )
 );
-
 
 
 // Passport configuration settings for local login
